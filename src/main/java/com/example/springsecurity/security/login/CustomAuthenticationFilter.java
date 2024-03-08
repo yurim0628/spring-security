@@ -13,7 +13,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.io.IOException;
 
 import static com.example.springsecurity.common.exception.ErrorCode.INVALID_REQUEST;
-import static com.example.springsecurity.security.SecurityConstants.LOGIN_REQUEST_ATTRIBUTE;
+import static com.example.springsecurity.security.SecurityConstants.EMAIL_ATTRIBUTE;
 
 public class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -32,7 +32,7 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
             throws AuthenticationException {
         try {
             LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
-            request.setAttribute(LOGIN_REQUEST_ATTRIBUTE, loginRequest);
+            request.setAttribute(EMAIL_ATTRIBUTE, loginRequest.email());
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                     = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
             return getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);

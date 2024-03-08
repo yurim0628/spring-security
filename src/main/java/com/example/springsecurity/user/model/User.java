@@ -39,15 +39,11 @@ public class User {
         this.isAccountNonLocked = true;
     }
 
-    public void resetFailedLoginAttempts() {
-        this.failedLoginAttempts = 0;
-    }
-
-    public void increaseFailedLoginAttempts() {
-        this.failedLoginAttempts++;
-    }
-
     public void setAccountNonLocked(boolean accountNonLocked) {
         isAccountNonLocked = accountNonLocked;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
     }
 }

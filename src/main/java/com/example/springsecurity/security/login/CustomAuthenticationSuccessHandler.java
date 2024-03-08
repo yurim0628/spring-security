@@ -5,7 +5,6 @@ import com.example.springsecurity.security.PrincipalDetails;
 import com.example.springsecurity.security.jwt.JwtService;
 import com.example.springsecurity.security.jwt.Token;
 import com.example.springsecurity.user.model.User;
-import com.example.springsecurity.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,7 +25,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -35,8 +34,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         User user = principalDetails.user();
         if(user.getFailedLoginAttempts() > MIN_FAILED_LOGIN_ATTEMPTS) {
-            user.resetFailedLoginAttempts();
-            userRepository.save(user);
+            authenticationService.resetFailedLoginAttempts(user);
         }
 
         Token token = jwtService.createToken(
