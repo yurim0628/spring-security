@@ -1,6 +1,8 @@
 package com.example.springsecurity.security.login;
 
+import com.example.springsecurity.common.redis.RedisService;
 import com.example.springsecurity.security.jwt.JwtService;
+import com.example.springsecurity.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +16,8 @@ public class CustomAuthenticationConfig extends SecurityConfigurerAdapter<Defaul
 
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
+    private final RedisService redisService;
+    private final UserRepository userRepository;
 
     @Override
     public void configure(HttpSecurity http) {
@@ -35,11 +39,11 @@ public class CustomAuthenticationConfig extends SecurityConfigurerAdapter<Defaul
     }
 
     public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-        return new CustomAuthenticationSuccessHandler(objectMapper, jwtService);
+        return new CustomAuthenticationSuccessHandler(objectMapper, jwtService, userRepository);
     }
 
     public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
-        return new CustomAuthenticationFailureHandler(objectMapper);
+        return new CustomAuthenticationFailureHandler(objectMapper, redisService, userRepository);
     }
 }
 

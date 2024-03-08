@@ -1,7 +1,9 @@
 package com.example.springsecurity.security;
 
+import com.example.springsecurity.common.redis.RedisService;
 import com.example.springsecurity.security.jwt.JwtService;
 import com.example.springsecurity.security.login.CustomAuthenticationConfig;
+import com.example.springsecurity.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,8 @@ public class SecurityConfig {
 
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
+    private final RedisService redisService;
+    private final UserRepository userRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -51,6 +55,6 @@ public class SecurityConfig {
     }
 
     private CustomAuthenticationConfig customAuthenticationConfig() {
-        return new CustomAuthenticationConfig(objectMapper, jwtService);
+        return new CustomAuthenticationConfig(objectMapper, jwtService, redisService, userRepository);
     }
 }

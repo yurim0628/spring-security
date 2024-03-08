@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static com.example.springsecurity.common.redis.RedisConstants.REFRESH_TOKEN_PREFIX;
 import static com.example.springsecurity.security.SecurityConstants.*;
 
 @Slf4j

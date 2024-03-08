@@ -25,6 +25,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    private boolean isAccountNonLocked;
+    private int failedLoginAttempts;
+
     @Builder
     private User(
             String email,
@@ -33,5 +36,18 @@ public class User {
         this.email = email;
         this.password = password;
         this.authority = ROLE_USER;
+        this.isAccountNonLocked = true;
+    }
+
+    public void resetFailedLoginAttempts() {
+        this.failedLoginAttempts = 0;
+    }
+
+    public void increaseFailedLoginAttempts() {
+        this.failedLoginAttempts++;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
     }
 }
