@@ -5,7 +5,7 @@ import com.example.springsecurity.user.model.User;
 import com.example.springsecurity.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import static com.example.springsecurity.security.SecurityConstants.*;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 

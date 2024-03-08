@@ -46,4 +46,9 @@ public class RedisService {
             throw new CustomException(JSON_PROCESSING_ERROR);
         }
     }
+
+    public void delete(String key){
+        log.info("delete data from redis with key: {}", key);
+        redisTemplate.delete(key);
+    }
 }

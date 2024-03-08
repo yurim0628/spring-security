@@ -1,5 +1,7 @@
 package com.example.springsecurity.security.jwt;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -44,5 +46,21 @@ public class JwtProvider {
 
     public Date calculateTokenExpiration(Long expiration) {
         return new Date(System.currentTimeMillis() + expiration);
+    }
+
+    public String getSubject(String token) throws JwtException {
+        return getClaims(token).getSubject();
+    }
+
+    public Long getExpiration(String token) throws JwtException {
+        return getClaims(token).getExpiration().getTime();
+    }
+
+    private Claims getClaims(String token) throws JwtException {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

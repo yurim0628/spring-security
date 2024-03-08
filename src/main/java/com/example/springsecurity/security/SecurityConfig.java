@@ -3,6 +3,8 @@ package com.example.springsecurity.security;
 import com.example.springsecurity.security.jwt.JwtService;
 import com.example.springsecurity.security.login.AuthenticationService;
 import com.example.springsecurity.security.login.CustomAuthenticationConfig;
+import com.example.springsecurity.security.logout.CustomLogoutHandler;
+import com.example.springsecurity.security.logout.CustomLogoutSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
 @RequiredArgsConstructor
@@ -47,6 +50,11 @@ public class SecurityConfig {
                 .with(
                         customAuthenticationConfig(),
                         Customizer.withDefaults()
+                )
+                .logout(logoutConfigurer ->
+                        logoutConfigurer
+                                .addLogoutHandler(customLogoutHandler())
+                                .logoutSuccessHandler(customLogoutSuccessHandler())
                 );
 
         return http.build();
@@ -54,5 +62,13 @@ public class SecurityConfig {
 
     private CustomAuthenticationConfig customAuthenticationConfig() {
         return new CustomAuthenticationConfig(objectMapper, jwtService, authenticationService);
+    }
+
+    private CustomLogoutHandler customLogoutHandler() {
+        return new CustomLogoutHandler(objectMapper, jwtService);
+    }
+
+    private LogoutSuccessHandler customLogoutSuccessHandler() {
+        return new CustomLogoutSuccessHandler(objectMapper);
     }
 }
