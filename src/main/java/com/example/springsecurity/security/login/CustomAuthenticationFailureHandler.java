@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
@@ -35,7 +36,10 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             error = handleBadCredentials(request);
         } else if (exception instanceof LockedException) {
             error = LOCKED_ACCOUNT;
-        } else if (exception instanceof InternalAuthenticationServiceException) {
+        } else if (exception instanceof DisabledException) {
+            error = DISABLED_ACCOUNT;
+        }
+        else if (exception instanceof InternalAuthenticationServiceException) {
             error = INTERNAL_AUTHENTICATION_ERROR;
         } else {
             error = UNKNOWN_ERROR;

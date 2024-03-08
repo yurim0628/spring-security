@@ -18,6 +18,7 @@ public enum ErrorCode {
     INTERNAL_AUTHENTICATION_ERROR(INTERNAL_SERVER_ERROR, "로그인 중에 내부 서버 오류가 발생했습니다."),
     UNKNOWN_ERROR(INTERNAL_SERVER_ERROR, "로그인 중에 알 수 없는 오류가 발생했습니다."),
     LOCKED_ACCOUNT(LOCKED, "계정이 잠겼습니다. 24시간 후에 다시 시도해주세요."),
+    DISABLED_ACCOUNT(BAD_REQUEST,"이미 회원 탈퇴된 계정입니다."),
     EMAIL_ALREADY_EXISTS(CONFLICT, "이미 사용 중인 이메일 입니다.");
 
     private final HttpStatus status;
