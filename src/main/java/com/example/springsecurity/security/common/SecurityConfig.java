@@ -1,10 +1,12 @@
-package com.example.springsecurity.security;
+package com.example.springsecurity.security.common;
 
+import com.example.springsecurity.security.jwt.JwtAuthenticationConfig;
 import com.example.springsecurity.security.jwt.JwtService;
 import com.example.springsecurity.security.login.AuthenticationService;
 import com.example.springsecurity.security.login.CustomAuthenticationConfig;
 import com.example.springsecurity.security.logout.CustomLogoutHandler;
 import com.example.springsecurity.security.logout.CustomLogoutSuccessHandler;
+import com.example.springsecurity.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +28,7 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
+    private final UserRepository userRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -51,6 +54,10 @@ public class SecurityConfig {
                         customAuthenticationConfig(),
                         Customizer.withDefaults()
                 )
+                .with(
+                        jwtAuthenticationConfig(),
+                        Customizer.withDefaults()
+                )
                 .logout(logoutConfigurer ->
                         logoutConfigurer
                                 .addLogoutHandler(customLogoutHandler())
@@ -61,7 +68,11 @@ public class SecurityConfig {
     }
 
     private CustomAuthenticationConfig customAuthenticationConfig() {
-        return new CustomAuthenticationConfig(objectMapper, jwtService, authenticationService);
+        return new CustomAuthenticationConfig(objectMapper, jwtService, authenticationService, userRepository);
+    }
+
+    private JwtAuthenticationConfig jwtAuthenticationConfig() {
+        return new JwtAuthenticationConfig(objectMapper, jwtService);
     }
 
     private CustomLogoutHandler customLogoutHandler() {

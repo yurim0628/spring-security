@@ -1,7 +1,8 @@
-package com.example.springsecurity.security;
+package com.example.springsecurity.security.common;
 
 public class SecurityConstants {
     public static final String EMAIL_ATTRIBUTE = "email";
+    public static final String EXCEPTION_ATTRIBUTE = "exception";
 
     public static final String BLACKLIST_PREFIX = "black_list:";
     public static final String REFRESH_TOKEN_PREFIX = "refresh_token:";
@@ -20,4 +21,8 @@ public class SecurityConstants {
     public static final int DEFAULT_LOGIN_ATTEMPT_INCREMENT = 1;
     public static final int MAX_FAILED_LOGIN_ATTEMPTS = 5;
     public static final long ACCOUNT_LOCK_EXPIRATION = 1000 * 60 * 60 * 24;
+
+    public static final String ACCESS_TOKEN_HEADER = "Authorization";
+    public static final String BEARER_PREFIX = "Bearer ";
+    public static final int BEARER_PREFIX_LENGTH = BEARER_PREFIX.length();
 }
