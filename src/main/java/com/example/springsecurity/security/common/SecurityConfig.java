@@ -1,5 +1,7 @@
 package com.example.springsecurity.security.common;
 
+import com.example.springsecurity.security.jwt.CustomAccessDeniedHandler;
+import com.example.springsecurity.security.jwt.CustomAuthenticationEntryPoint;
 import com.example.springsecurity.security.jwt.JwtAuthenticationConfig;
 import com.example.springsecurity.security.jwt.JwtService;
 import com.example.springsecurity.security.login.AuthenticationService;
@@ -58,6 +60,11 @@ public class SecurityConfig {
                         jwtAuthenticationConfig(),
                         Customizer.withDefaults()
                 )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling
+                                .authenticationEntryPoint(customAuthenticationEntryPoint())
+                                .accessDeniedHandler(customAccessDeniedHandler())
+                )
                 .logout(logoutConfigurer ->
                         logoutConfigurer
                                 .addLogoutHandler(customLogoutHandler())
@@ -73,6 +80,14 @@ public class SecurityConfig {
 
     private JwtAuthenticationConfig jwtAuthenticationConfig() {
         return new JwtAuthenticationConfig(objectMapper, jwtService);
+    }
+
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint(objectMapper);
+    }
+
+    private CustomAccessDeniedHandler customAccessDeniedHandler() {
+        return new CustomAccessDeniedHandler(objectMapper);
     }
 
     private CustomLogoutHandler customLogoutHandler() {
