@@ -3,6 +3,7 @@ package com.example.springsecurity.security.login;
 import com.example.springsecurity.common.exception.ErrorCode;
 import com.example.springsecurity.common.response.Response;
 import com.example.springsecurity.user.model.User;
+import com.example.springsecurity.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +19,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static com.example.springsecurity.common.exception.ErrorCode.*;
-import static com.example.springsecurity.security.SecurityConstants.*;
+import static com.example.springsecurity.security.common.SecurityConstants.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -27,6 +28,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
     private final ObjectMapper objectMapper;
     private final AuthenticationService authenticationService;
+    private final UserRepository userRepository;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
@@ -49,7 +51,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
     private ErrorCode handleBadCredentials(HttpServletRequest request) {
         String email = (String) request.getAttribute(EMAIL_ATTRIBUTE);
-        Optional<User> userOptional = authenticationService.findByEmail(email);
+        Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();

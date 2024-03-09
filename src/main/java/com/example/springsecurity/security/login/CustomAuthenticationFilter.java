@@ -13,7 +13,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.io.IOException;
 
 import static com.example.springsecurity.common.exception.ErrorCode.INVALID_REQUEST;
-import static com.example.springsecurity.security.SecurityConstants.EMAIL_ATTRIBUTE;
+import static com.example.springsecurity.security.common.SecurityConstants.EMAIL_ATTRIBUTE;
 
 public class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 

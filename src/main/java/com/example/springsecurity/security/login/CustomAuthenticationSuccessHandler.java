@@ -3,7 +3,7 @@ package com.example.springsecurity.security.login;
 import com.example.springsecurity.common.response.Response;
 import com.example.springsecurity.security.PrincipalDetails;
 import com.example.springsecurity.security.jwt.JwtService;
-import com.example.springsecurity.security.jwt.Token;
+import com.example.springsecurity.security.Token;
 import com.example.springsecurity.user.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.example.springsecurity.security.SecurityConstants.MIN_FAILED_LOGIN_ATTEMPTS;
+import static com.example.springsecurity.security.common.SecurityConstants.MIN_FAILED_LOGIN_ATTEMPTS;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 

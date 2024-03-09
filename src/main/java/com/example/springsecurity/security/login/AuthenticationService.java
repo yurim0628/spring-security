@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static com.example.springsecurity.security.SecurityConstants.*;
+import static com.example.springsecurity.security.common.SecurityConstants.*;
 
 @Slf4j
 @Service
@@ -57,9 +55,5 @@ public class AuthenticationService {
             userRepository.save(user);
             log.info("checked and set account unlocked for user with email: {}", user.getEmail());
         }
-    }
-
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
     }
 }
