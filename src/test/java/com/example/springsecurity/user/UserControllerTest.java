@@ -44,12 +44,11 @@ public class UserControllerTest {
     @Autowired
     UserRepository userRepository;
 
-    User user;
     @BeforeEach
     void setUp() {
         String email = "user@email.com";
         String encodedPassword = passwordEncoder.encode("1234");
-        user = User.builder()
+        User user = User.builder()
                 .email(email)
                 .password(encodedPassword)
                 .build();
