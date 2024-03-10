@@ -1,4 +1,4 @@
-package com.example.springsecurity.security;
+package com.example.springsecurity.security.token.common;
 
 import lombok.Builder;
 

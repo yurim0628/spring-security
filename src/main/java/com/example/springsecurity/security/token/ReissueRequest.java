@@ -1,4 +1,4 @@
-package com.example.springsecurity.security.jwt;
+package com.example.springsecurity.security.token;
 
 public record ReissueRequest(
         String refreshToken

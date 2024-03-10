@@ -1,10 +1,10 @@
-package com.example.springsecurity.security.jwt;
+package com.example.springsecurity.security.token;
 
 import com.example.springsecurity.common.exception.CustomException;
 import com.example.springsecurity.common.redis.RedisService;
 import com.example.springsecurity.security.PrincipalDetailsService;
-import com.example.springsecurity.security.RefreshToken;
-import com.example.springsecurity.security.Token;
+import com.example.springsecurity.security.token.common.RefreshToken;
+import com.example.springsecurity.security.token.common.Token;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -25,17 +25,17 @@ import static com.example.springsecurity.security.common.SecurityConstants.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtService {
+public class TokenAuthenticationService {
 
-    private final JwtProvider jwtProvider;
+    private final TokenAuthenticationProvider tokenAuthenticationProvider;
     private final RedisService redisService;
     private final PrincipalDetailsService principalDetailsService;
 
     public Token createToken(String email, String authorities, String uuid) {
-        String accessToken = jwtProvider.generateAccessToken(email, authorities);
+        String accessToken = tokenAuthenticationProvider.generateAccessToken(email, authorities);
         log.info("access token generated for email: {}", email);
 
-        String refreshToken = jwtProvider.generateRefreshToken(uuid);
+        String refreshToken = tokenAuthenticationProvider.generateRefreshToken(uuid);
         log.info("refresh token generated for uuid: {}", uuid);
 
         saveRefreshToken(uuid, email, authorities, refreshToken);
@@ -58,7 +58,7 @@ public class JwtService {
 
     public void removeRefreshToken(String refreshToken) {
         try {
-            String uuid = jwtProvider.getSubject(refreshToken);
+            String uuid = tokenAuthenticationProvider.getSubject(refreshToken);
             redisService.delete(REFRESH_TOKEN_PREFIX + uuid);
             log.info("refresh token removed for uuid: {}", uuid);
         } catch (ExpiredJwtException e) {
@@ -70,7 +70,7 @@ public class JwtService {
 
     public void addBlackList(String accessToken) {
         try {
-            long expirationTime = jwtProvider.getExpiration(accessToken);
+            long expirationTime = tokenAuthenticationProvider.getExpiration(accessToken);
             long validTime = expirationTime - Instant.now().toEpochMilli();
             redisService.set(
                     BLACKLIST_PREFIX + accessToken,
@@ -91,7 +91,7 @@ public class JwtService {
 
     public ReissueResponse reissueToken(String refreshToken) {
         try {
-            String uuid = jwtProvider.getSubject(refreshToken);
+            String uuid = tokenAuthenticationProvider.getSubject(refreshToken);
             RefreshToken redisRefreshToken = redisService.get(REFRESH_TOKEN_PREFIX + uuid, RefreshToken.class)
                     .orElseThrow(() -> new CustomException(INVALID_TOKEN));
 
@@ -117,7 +117,7 @@ public class JwtService {
 
     public Authentication getAuthentication(String accessToken) throws ExpiredJwtException, SignatureException,
             MalformedJwtException, UnsupportedJwtException, IllegalArgumentException {
-        String email = jwtProvider.getSubject(accessToken);
+        String email = tokenAuthenticationProvider.getSubject(accessToken);
         UserDetails userDetails = principalDetailsService.loadUserByUsername(email);
 
         return new UsernamePasswordAuthenticationToken(

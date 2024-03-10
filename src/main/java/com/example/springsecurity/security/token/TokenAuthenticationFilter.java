@@ -1,4 +1,4 @@
-package com.example.springsecurity.security.jwt;
+package com.example.springsecurity.security.token;
 
 import com.example.springsecurity.common.exception.CustomException;
 import com.example.springsecurity.common.response.Response;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -27,13 +27,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AntPathRequestMatcher reissueRequestMatcher
-            = new AntPathRequestMatcher("/reissue", "POST");
-
+    private final RequestMatcher reissueRequestMatcher;
     private final ObjectMapper objectMapper;
-    private final JwtService jwtService;
+    private final TokenAuthenticationService tokenAuthenticationService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -45,18 +43,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (isReissueRequest) {
                 String refreshToken = getRefreshToken(request);
-                ReissueResponse reissueResponse = jwtService.reissueToken(refreshToken);
+                ReissueResponse reissueResponse = tokenAuthenticationService.reissueToken(refreshToken);
                 sendResponse(response, reissueResponse);
                 return;
             }
 
+            request.setAttribute(EXCEPTION_ATTRIBUTE, NOT_TOKEN);
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            Authentication authentication = jwtService.getAuthentication(accessToken);
-            boolean isBlackListToken = jwtService.isBlackListToken(accessToken);
+            Authentication authentication = tokenAuthenticationService.getAuthentication(accessToken);
+            boolean isBlackListToken = tokenAuthenticationService.isBlackListToken(accessToken);
 
             if (isBlackListToken) {
                 request.setAttribute(EXCEPTION_ATTRIBUTE, BLACKLIST_TOKEN);

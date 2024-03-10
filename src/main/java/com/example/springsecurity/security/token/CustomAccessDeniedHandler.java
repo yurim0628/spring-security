@@ -1,4 +1,4 @@
-package com.example.springsecurity.security.jwt;
+package com.example.springsecurity.security.token;
 
 import com.example.springsecurity.common.response.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;

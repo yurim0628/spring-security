@@ -1,4 +1,4 @@
-package com.example.springsecurity.security.jwt;
+package com.example.springsecurity.security.token;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -14,11 +14,11 @@ import static com.example.springsecurity.security.common.SecurityConstants.*;
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 
 @Component
-public class JwtProvider {
+public class TokenAuthenticationProvider {
 
     private final Key key;
 
-    public JwtProvider(@Value("${jwt.secret-key}") String secretKey) {
+    public TokenAuthenticationProvider(@Value("${jwt.secret-key}") String secretKey) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 

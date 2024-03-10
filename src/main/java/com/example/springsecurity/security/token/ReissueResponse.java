@@ -1,6 +1,6 @@
-package com.example.springsecurity.security.jwt;
+package com.example.springsecurity.security.token;
 
-import com.example.springsecurity.security.Token;
+import com.example.springsecurity.security.token.common.Token;
 import lombok.Builder;
 
 @Builder

@@ -1,4 +1,4 @@
-package com.example.springsecurity.security.jwt;
+package com.example.springsecurity.security.token;
 
 import com.example.springsecurity.common.exception.ErrorCode;
 import com.example.springsecurity.common.response.Response;
@@ -11,10 +11,10 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
+import static com.example.springsecurity.security.common.SecurityConstants.EXCEPTION_ATTRIBUTE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.web.servlet.DispatcherServlet.EXCEPTION_ATTRIBUTE;
 
 @RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
