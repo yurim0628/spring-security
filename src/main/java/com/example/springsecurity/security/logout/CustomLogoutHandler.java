@@ -1,7 +1,7 @@
 package com.example.springsecurity.security.logout;
 
 import com.example.springsecurity.common.exception.CustomException;
-import com.example.springsecurity.security.jwt.JwtService;
+import com.example.springsecurity.security.token.TokenAuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ import static com.example.springsecurity.common.exception.ErrorCode.INVALID_REQU
 public class CustomLogoutHandler implements LogoutHandler {
 
     private final ObjectMapper objectMapper;
-    private final JwtService jwtService;
+    private final TokenAuthenticationService tokenAuthenticationService;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -25,10 +25,10 @@ public class CustomLogoutHandler implements LogoutHandler {
             LogoutRequest logoutRequest = objectMapper.readValue(request.getReader(), LogoutRequest.class);
 
             String refreshToken = logoutRequest.refreshToken();
-            jwtService.removeRefreshToken(refreshToken);
+            tokenAuthenticationService.removeRefreshToken(refreshToken);
 
             String accessToken = logoutRequest.accessToken();
-            jwtService.addBlackList(accessToken);
+            tokenAuthenticationService.addBlackList(accessToken);
         } catch (IOException e) {
             throw new CustomException(INVALID_REQUEST);
         }

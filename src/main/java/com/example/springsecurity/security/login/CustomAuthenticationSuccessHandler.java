@@ -2,8 +2,8 @@ package com.example.springsecurity.security.login;
 
 import com.example.springsecurity.common.response.Response;
 import com.example.springsecurity.security.PrincipalDetails;
-import com.example.springsecurity.security.jwt.JwtService;
-import com.example.springsecurity.security.Token;
+import com.example.springsecurity.security.token.TokenAuthenticationService;
+import com.example.springsecurity.security.token.common.Token;
 import com.example.springsecurity.user.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final ObjectMapper objectMapper;
-    private final JwtService jwtService;
+    private final TokenAuthenticationService tokenAuthenticationService;
     private final AuthenticationService authenticationService;
 
     @Override
@@ -37,7 +37,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             authenticationService.resetFailedLoginAttempts(user);
         }
 
-        Token token = jwtService.createToken(
+        Token token = tokenAuthenticationService.createToken(
                 principalDetails.getUsername(),
                 principalDetails.getAuthorities().toString(),
                 generateRefreshTokenUUID()

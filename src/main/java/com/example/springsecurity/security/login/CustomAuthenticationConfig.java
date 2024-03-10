@@ -1,6 +1,6 @@
 package com.example.springsecurity.security.login;
 
-import com.example.springsecurity.security.jwt.JwtService;
+import com.example.springsecurity.security.token.TokenAuthenticationService;
 import com.example.springsecurity.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class CustomAuthenticationConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
     private final ObjectMapper objectMapper;
-    private final JwtService jwtService;
+    private final TokenAuthenticationService tokenAuthenticationService;
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
 
@@ -38,7 +38,7 @@ public class CustomAuthenticationConfig extends SecurityConfigurerAdapter<Defaul
     }
 
     public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-        return new CustomAuthenticationSuccessHandler(objectMapper, jwtService, authenticationService);
+        return new CustomAuthenticationSuccessHandler(objectMapper, tokenAuthenticationService, authenticationService);
     }
 
     public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
