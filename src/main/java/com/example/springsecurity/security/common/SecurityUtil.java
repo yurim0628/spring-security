@@ -9,9 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUtil {
 
-    public static Long getUserId() {
+    public static String getUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        return principalDetails.getUserId();
+        return principalDetails.getUsername();
     }
 }

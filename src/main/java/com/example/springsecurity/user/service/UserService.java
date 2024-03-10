@@ -39,8 +39,8 @@ public class UserService {
 
     @Transactional
     public void unregister() {
-        Long userId = SecurityUtil.getUserId();
-        User user = userRepository.getUserById(userId).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        String email = SecurityUtil.getUsername();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         user.setEnabled(ACCOUNT_ENABLED_STATUS);
         userRepository.save(user);
     }
