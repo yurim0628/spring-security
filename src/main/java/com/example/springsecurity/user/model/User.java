@@ -25,6 +25,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    private boolean isEnabled;
     private boolean isAccountNonLocked;
     private int failedLoginAttempts;
 
@@ -36,7 +37,12 @@ public class User {
         this.email = email;
         this.password = password;
         this.authority = ROLE_USER;
+        this.isEnabled = true;
         this.isAccountNonLocked = true;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
     }
 
     public void setAccountNonLocked(boolean accountNonLocked) {

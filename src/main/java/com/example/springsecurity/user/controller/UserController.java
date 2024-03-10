@@ -6,10 +6,7 @@ import com.example.springsecurity.user.dto.response.RegisterResponse;
 import com.example.springsecurity.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -21,5 +18,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<Response<RegisterResponse>> register(@RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(Response.success(userService.register(registerRequest)));
+    }
+
+    @DeleteMapping("/unregister")
+    public ResponseEntity<Response<Void>> unregister() {
+        userService.unregister();
+        return ResponseEntity.ok(Response.success());
     }
 }

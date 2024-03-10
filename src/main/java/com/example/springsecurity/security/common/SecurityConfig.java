@@ -1,9 +1,9 @@
 package com.example.springsecurity.security.common;
 
-import com.example.springsecurity.security.jwt.CustomAccessDeniedHandler;
-import com.example.springsecurity.security.jwt.CustomAuthenticationEntryPoint;
-import com.example.springsecurity.security.jwt.JwtAuthenticationConfig;
-import com.example.springsecurity.security.jwt.JwtService;
+import com.example.springsecurity.security.token.CustomAccessDeniedHandler;
+import com.example.springsecurity.security.token.CustomAuthenticationEntryPoint;
+import com.example.springsecurity.security.token.TokenAuthenticationConfig;
+import com.example.springsecurity.security.token.TokenAuthenticationService;
 import com.example.springsecurity.security.login.AuthenticationService;
 import com.example.springsecurity.security.login.CustomAuthenticationConfig;
 import com.example.springsecurity.security.logout.CustomLogoutHandler;
@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 public class SecurityConfig {
 
     private final ObjectMapper objectMapper;
-    private final JwtService jwtService;
+    private final TokenAuthenticationService tokenAuthenticationService;
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
 
@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(authorizeRequests->
                         authorizeRequests
-                                .requestMatchers("/users/**").permitAll()
+                                .requestMatchers("/users/register").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement((sessionManagement) -> sessionManagement
@@ -75,11 +75,11 @@ public class SecurityConfig {
     }
 
     private CustomAuthenticationConfig customAuthenticationConfig() {
-        return new CustomAuthenticationConfig(objectMapper, jwtService, authenticationService, userRepository);
+        return new CustomAuthenticationConfig(objectMapper, tokenAuthenticationService, authenticationService, userRepository);
     }
 
-    private JwtAuthenticationConfig jwtAuthenticationConfig() {
-        return new JwtAuthenticationConfig(objectMapper, jwtService);
+    private TokenAuthenticationConfig jwtAuthenticationConfig() {
+        return new TokenAuthenticationConfig(objectMapper, tokenAuthenticationService);
     }
 
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
@@ -91,7 +91,7 @@ public class SecurityConfig {
     }
 
     private CustomLogoutHandler customLogoutHandler() {
-        return new CustomLogoutHandler(objectMapper, jwtService);
+        return new CustomLogoutHandler(objectMapper, tokenAuthenticationService);
     }
 
     private LogoutSuccessHandler customLogoutSuccessHandler() {

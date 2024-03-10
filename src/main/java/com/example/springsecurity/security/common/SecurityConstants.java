@@ -1,6 +1,9 @@
 package com.example.springsecurity.security.common;
 
 public class SecurityConstants {
+    public static final String REISSUE_URL_PATTERN = "/reissue";
+    public static final String DEFAULT_HTTP_METHOD = "POST";
+
     public static final String EMAIL_ATTRIBUTE = "email";
     public static final String EXCEPTION_ATTRIBUTE = "exception";
 
@@ -16,6 +19,7 @@ public class SecurityConstants {
     public static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30;
     public static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7;
 
+    public static final boolean ACCOUNT_ENABLED_STATUS = false;
     public static final boolean ACCOUNT_UNLOCKED_STATUS = true;
     public static final int MIN_FAILED_LOGIN_ATTEMPTS = 0;
     public static final int DEFAULT_LOGIN_ATTEMPT_INCREMENT = 1;
