@@ -2,8 +2,8 @@ package com.example.springsecurity.security.login;
 
 import com.example.springsecurity.common.response.Response;
 import com.example.springsecurity.security.PrincipalDetails;
-import com.example.springsecurity.security.token.TokenAuthenticationService;
-import com.example.springsecurity.security.token.common.Token;
+import com.example.springsecurity.security.authentication.TokenAuthenticationService;
+import com.example.springsecurity.security.Token;
 import com.example.springsecurity.user.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

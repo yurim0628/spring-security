@@ -1,8 +1,8 @@
 package com.example.springsecurity.user.controller;
 
 import com.example.springsecurity.common.response.Response;
-import com.example.springsecurity.user.dto.request.RegisterRequest;
-import com.example.springsecurity.user.dto.response.RegisterResponse;
+import com.example.springsecurity.user.dto.RegisterRequest;
+import com.example.springsecurity.user.dto.RegisterResponse;
 import com.example.springsecurity.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +18,5 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<Response<RegisterResponse>> register(@RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(Response.success(userService.register(registerRequest)));
-    }
-
-    @DeleteMapping("/unregister")
-    public ResponseEntity<Response<Void>> unregister() {
-        userService.unregister();
-        return ResponseEntity.ok(Response.success());
     }
 }

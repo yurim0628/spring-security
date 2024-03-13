@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 import static com.example.springsecurity.user.model.Authority.ROLE_USER;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -25,9 +27,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    private boolean isEnabled;
-    private boolean isAccountNonLocked;
     private int failedLoginAttempts;
+    private LocalDateTime lockExpiration;
 
     @Builder
     private User(
@@ -37,19 +38,13 @@ public class User {
         this.email = email;
         this.password = password;
         this.authority = ROLE_USER;
-        this.isEnabled = true;
-        this.isAccountNonLocked = true;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
     }
 
     public void setFailedLoginAttempts(int failedLoginAttempts) {
         this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public void setLockExpiration(LocalDateTime lockExpiration) {
+        this.lockExpiration = lockExpiration;
     }
 }

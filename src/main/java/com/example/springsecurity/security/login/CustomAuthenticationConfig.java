@@ -1,6 +1,6 @@
 package com.example.springsecurity.security.login;
 
-import com.example.springsecurity.security.token.TokenAuthenticationService;
+import com.example.springsecurity.security.authentication.TokenAuthenticationService;
 import com.example.springsecurity.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

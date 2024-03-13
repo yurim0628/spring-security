@@ -4,6 +4,7 @@ import com.example.springsecurity.user.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -24,8 +25,6 @@ public record PrincipalDetails(User user) implements UserDetails {
         return user.getEmail();
     }
 
-    public Long getUserId() { return user.getId(); }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -33,7 +32,11 @@ public record PrincipalDetails(User user) implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return user.isAccountNonLocked();
+        LocalDateTime lockExpiration = user.getLockExpiration();
+        if (lockExpiration != null) {
+            return LocalDateTime.now().isAfter(lockExpiration);
+        }
+        return true;
     }
 
     @Override
@@ -43,6 +46,6 @@ public record PrincipalDetails(User user) implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isEnabled();
+        return true;
     }
 }

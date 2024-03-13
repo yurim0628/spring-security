@@ -60,6 +60,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             int failedLoginAttempts = user.getFailedLoginAttempts();
             if (failedLoginAttempts >= MAX_FAILED_LOGIN_ATTEMPTS) {
                 authenticationService.setAccountLocked(user);
+                authenticationService.resetFailedLoginAttempts(user);
                 return LOCKED_ACCOUNT;
             }
 

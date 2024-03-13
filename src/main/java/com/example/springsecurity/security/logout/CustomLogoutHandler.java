@@ -1,7 +1,7 @@
 package com.example.springsecurity.security.logout;
 
 import com.example.springsecurity.common.exception.CustomException;
-import com.example.springsecurity.security.token.TokenAuthenticationService;
+import com.example.springsecurity.security.authentication.TokenAuthenticationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

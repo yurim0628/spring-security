@@ -87,20 +87,6 @@ public class SecurityFilterTest {
         resultActions.andExpect(status().isLocked());
     }
 
-    @Test
-    @DisplayName("로그인_실패_탈퇴_계정")
-    public void loginFailWithDisabledAccount() throws Exception {
-        // given
-        createDisabledUser();
-        String requestBodyJson = createLoginRequestBody(VALID_EMAIL, VALID_PASSWORD);
-
-        // when
-        ResultActions resultActions = performLogin(requestBodyJson);
-
-        // then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
     private ResultActions performLogin(String requestBodyJson) throws Exception {
         return mvc.perform(
                 post(LOGIN_ENDPOINT)
@@ -120,13 +106,6 @@ public class SecurityFilterTest {
     private void createLockedUser() {
         User user = buildUser();
         user.setFailedLoginAttempts(FAILED_LOGIN_ATTEMPTS);
-        userRepository.save(user);
-    }
-
-    @Transactional
-    private void createDisabledUser() {
-        User user = buildUser();
-        user.setEnabled(ACCOUNT_ENABLED_STATUS);
         userRepository.save(user);
     }
 

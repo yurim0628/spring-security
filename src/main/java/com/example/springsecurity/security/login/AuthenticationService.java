@@ -1,12 +1,13 @@
 package com.example.springsecurity.security.login;
 
-import com.example.springsecurity.common.redis.RedisService;
 import com.example.springsecurity.user.model.User;
 import com.example.springsecurity.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 import static com.example.springsecurity.security.common.SecurityConstants.*;
 
@@ -15,7 +16,6 @@ import static com.example.springsecurity.security.common.SecurityConstants.*;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final RedisService redisService;
     private final UserRepository userRepository;
 
     @Transactional
@@ -35,25 +35,10 @@ public class AuthenticationService {
 
     @Transactional
     public void setAccountLocked(User user) {
-        user.setAccountNonLocked(!ACCOUNT_UNLOCKED_STATUS);
-        redisService.set(
-                ACCOUNT_LOCKED_PREFIX + user.getEmail(),
-                ACCOUNT_LOCKED_STATUS,
-                ACCOUNT_LOCK_EXPIRATION
-        );
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime lockExpiration = currentDateTime.plusDays(LOCK_DURATION_DAYS);
+        user.setLockExpiration(lockExpiration);
         userRepository.save(user);
         log.info("set account locked for user with email: {}", user.getEmail());
-    }
-
-    @Transactional
-    public void checkAndSetAccountUnlocked(User user) {
-        boolean isAccountLocked
-                = redisService.get(ACCOUNT_LOCKED_PREFIX + user.getEmail(), String.class).isPresent();
-        if (!isAccountLocked) {
-            user.setFailedLoginAttempts(MIN_FAILED_LOGIN_ATTEMPTS);
-            user.setAccountNonLocked(ACCOUNT_UNLOCKED_STATUS);
-            userRepository.save(user);
-            log.info("checked and set account unlocked for user with email: {}", user.getEmail());
-        }
     }
 }

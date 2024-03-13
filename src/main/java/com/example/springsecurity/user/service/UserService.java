@@ -1,9 +1,8 @@
 package com.example.springsecurity.user.service;
 
 import com.example.springsecurity.common.exception.CustomException;
-import com.example.springsecurity.security.common.SecurityUtil;
-import com.example.springsecurity.user.dto.request.RegisterRequest;
-import com.example.springsecurity.user.dto.response.RegisterResponse;
+import com.example.springsecurity.user.dto.RegisterRequest;
+import com.example.springsecurity.user.dto.RegisterResponse;
 import com.example.springsecurity.user.model.User;
 import com.example.springsecurity.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.springsecurity.common.exception.ErrorCode.EMAIL_ALREADY_EXISTS;
-import static com.example.springsecurity.common.exception.ErrorCode.USER_NOT_FOUND;
-import static com.example.springsecurity.security.common.SecurityConstants.ACCOUNT_ENABLED_STATUS;
 
 @Slf4j
 @Service
@@ -35,13 +32,5 @@ public class UserService {
         userRepository.save(user);
 
         return RegisterResponse.from(user);
-    }
-
-    @Transactional
-    public void unregister() {
-        String email = SecurityUtil.getUsername();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        user.setEnabled(ACCOUNT_ENABLED_STATUS);
-        userRepository.save(user);
     }
 }

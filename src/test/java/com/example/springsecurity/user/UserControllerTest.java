@@ -1,9 +1,8 @@
 package com.example.springsecurity.user;
 
-import com.example.springsecurity.common.WithMockCustomUser;
 import com.example.springsecurity.common.response.Response;
-import com.example.springsecurity.user.dto.request.RegisterRequest;
-import com.example.springsecurity.user.dto.response.RegisterResponse;
+import com.example.springsecurity.user.dto.RegisterRequest;
+import com.example.springsecurity.user.dto.RegisterResponse;
 import com.example.springsecurity.user.model.User;
 import com.example.springsecurity.user.repository.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -103,19 +102,5 @@ public class UserControllerTest {
 
         // then
         resultActions.andExpect(status().isConflict());
-    }
-
-    @Test
-    @WithMockCustomUser
-    @DisplayName("회원_탈퇴_성공")
-    public void unregisterSuccess() throws Exception {
-        // given
-        // when
-        ResultActions resultActions = mvc.perform(delete("/users/unregister")
-                        .accept(APPLICATION_JSON))
-                .andDo(print());
-
-        // then
-        resultActions.andExpect(status().isOk());
     }
 }
