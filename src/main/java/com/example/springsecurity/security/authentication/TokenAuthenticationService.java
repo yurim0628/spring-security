@@ -86,7 +86,7 @@ public class TokenAuthenticationService {
     }
 
     public boolean isBlackListToken(String accessToken) {
-        return redisService.get(REFRESH_TOKEN_PREFIX + accessToken, String.class).isPresent();
+        return redisService.get(BLACKLIST_PREFIX + accessToken, String.class).isPresent();
     }
 
     public RefreshToken validateRefreshToken(String refreshToken) throws ExpiredJwtException, SignatureException,
