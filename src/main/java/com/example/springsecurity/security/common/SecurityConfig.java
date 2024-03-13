@@ -1,13 +1,14 @@
 package com.example.springsecurity.security.common;
 
-import com.example.springsecurity.security.token.CustomAccessDeniedHandler;
-import com.example.springsecurity.security.token.CustomAuthenticationEntryPoint;
-import com.example.springsecurity.security.token.TokenAuthenticationConfig;
-import com.example.springsecurity.security.token.TokenAuthenticationService;
+import com.example.springsecurity.security.authentication.CustomAccessDeniedHandler;
+import com.example.springsecurity.security.authentication.CustomAuthenticationEntryPoint;
+import com.example.springsecurity.security.authentication.TokenAuthenticationConfig;
+import com.example.springsecurity.security.authentication.TokenAuthenticationService;
 import com.example.springsecurity.security.login.AuthenticationService;
 import com.example.springsecurity.security.login.CustomAuthenticationConfig;
 import com.example.springsecurity.security.logout.CustomLogoutHandler;
 import com.example.springsecurity.security.logout.CustomLogoutSuccessHandler;
+import com.example.springsecurity.security.reissue.TokenReissueConfig;
 import com.example.springsecurity.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +58,11 @@ public class SecurityConfig {
                         Customizer.withDefaults()
                 )
                 .with(
-                        jwtAuthenticationConfig(),
+                        tokenAuthenticationConfig(),
+                        Customizer.withDefaults()
+                )
+                .with(
+                        tokenReissueConfig(),
                         Customizer.withDefaults()
                 )
                 .exceptionHandling(exceptionHandling ->
@@ -78,8 +83,12 @@ public class SecurityConfig {
         return new CustomAuthenticationConfig(objectMapper, tokenAuthenticationService, authenticationService, userRepository);
     }
 
-    private TokenAuthenticationConfig jwtAuthenticationConfig() {
-        return new TokenAuthenticationConfig(objectMapper, tokenAuthenticationService);
+    private TokenAuthenticationConfig tokenAuthenticationConfig() {
+        return new TokenAuthenticationConfig(tokenAuthenticationService);
+    }
+
+    private TokenReissueConfig tokenReissueConfig() {
+        return new TokenReissueConfig(objectMapper, tokenAuthenticationService);
     }
 
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
