@@ -1,6 +1,6 @@
-package com.example.springsecurity.security.token;
+package com.example.springsecurity.security.reissue;
 
-import com.example.springsecurity.security.token.common.Token;
+import com.example.springsecurity.security.Token;
 import lombok.Builder;
 
 @Builder

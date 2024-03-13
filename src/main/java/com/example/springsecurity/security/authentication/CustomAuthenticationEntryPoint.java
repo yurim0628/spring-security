@@ -1,4 +1,4 @@
-package com.example.springsecurity.security.token;
+package com.example.springsecurity.security.authentication;
 
 import com.example.springsecurity.common.exception.ErrorCode;
 import com.example.springsecurity.common.response.Response;

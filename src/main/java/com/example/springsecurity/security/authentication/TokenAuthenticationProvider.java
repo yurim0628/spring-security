@@ -1,4 +1,4 @@
-package com.example.springsecurity.security.token;
+package com.example.springsecurity.security.authentication;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

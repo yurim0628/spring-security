@@ -1,4 +1,4 @@
-package com.example.springsecurity.user.dto.response;
+package com.example.springsecurity.user.dto;
 
 import com.example.springsecurity.user.model.User;
 import lombok.Builder;

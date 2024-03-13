@@ -1,10 +1,11 @@
-package com.example.springsecurity.security.token;
+package com.example.springsecurity.security.authentication;
 
 import com.example.springsecurity.common.exception.CustomException;
 import com.example.springsecurity.common.redis.RedisService;
 import com.example.springsecurity.security.PrincipalDetailsService;
-import com.example.springsecurity.security.token.common.RefreshToken;
-import com.example.springsecurity.security.token.common.Token;
+import com.example.springsecurity.security.reissue.ReissueResponse;
+import com.example.springsecurity.security.RefreshToken;
+import com.example.springsecurity.security.Token;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
-import static com.example.springsecurity.common.exception.ErrorCode.EXPIRED_TOKEN;
 import static com.example.springsecurity.common.exception.ErrorCode.INVALID_TOKEN;
 import static com.example.springsecurity.security.common.SecurityConstants.*;
 
@@ -50,7 +50,7 @@ public class TokenAuthenticationService {
     public void saveRefreshToken(String uuid, String email, String authorities, String refreshToken) {
         redisService.set(
                 REFRESH_TOKEN_PREFIX + uuid,
-                RefreshToken.from(email, authorities, refreshToken),
+                RefreshToken.from(uuid, email, authorities, refreshToken),
                 REFRESH_TOKEN_EXPIRATION
         );
         log.info("refresh token saved for uuid: {}", uuid);
@@ -89,30 +89,31 @@ public class TokenAuthenticationService {
         return redisService.get(REFRESH_TOKEN_PREFIX + accessToken, String.class).isPresent();
     }
 
-    public ReissueResponse reissueToken(String refreshToken) {
-        try {
-            String uuid = tokenAuthenticationProvider.getSubject(refreshToken);
-            RefreshToken redisRefreshToken = redisService.get(REFRESH_TOKEN_PREFIX + uuid, RefreshToken.class)
-                    .orElseThrow(() -> new CustomException(INVALID_TOKEN));
+    public RefreshToken validateRefreshToken(String refreshToken) throws ExpiredJwtException, SignatureException,
+            MalformedJwtException, UnsupportedJwtException, IllegalArgumentException {
+        String uuid = tokenAuthenticationProvider.getSubject(refreshToken);
+        RefreshToken redisRefreshToken = redisService.get(
+                    REFRESH_TOKEN_PREFIX + uuid,
+                    RefreshToken.class
+        ).orElseThrow(() -> new CustomException(INVALID_TOKEN));
 
-            if (!refreshToken.equals(redisRefreshToken.refreshToken())) {
-                removeRefreshToken(uuid);
-                throw new CustomException(INVALID_TOKEN);
-            }
-
-            String email = redisRefreshToken.email();
-            String authorities = redisRefreshToken.authorities();
-            Token reissuedToken = createToken(email, authorities, uuid);
-
-            String reissuedRefreshToken = reissuedToken.refreshToken();
-            saveRefreshToken(uuid, email, authorities, reissuedRefreshToken);
-
-            return ReissueResponse.from(reissuedToken);
-        } catch (ExpiredJwtException e) {
-            throw new CustomException(EXPIRED_TOKEN);
-        } catch (SignatureException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
+        if (!refreshToken.equals(redisRefreshToken.refreshToken())) {
             throw new CustomException(INVALID_TOKEN);
         }
+
+        return redisRefreshToken;
+    }
+
+    public ReissueResponse reissueToken(RefreshToken redisRefreshToken) {
+        String uuid = redisRefreshToken.uuid();
+        String email = redisRefreshToken.email();
+        String authorities = redisRefreshToken.authorities();
+        Token reissuedToken = createToken(email, authorities, uuid);
+
+        String reissuedRefreshToken = reissuedToken.refreshToken();
+        saveRefreshToken(uuid, email, authorities, reissuedRefreshToken);
+
+        return ReissueResponse.from(reissuedToken);
     }
 
     public Authentication getAuthentication(String accessToken) throws ExpiredJwtException, SignatureException,
